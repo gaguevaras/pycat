@@ -3,6 +3,9 @@
 *.log.gz
 *.gch
 *.pyc
+
+.idea/
+
 __pycache__
 /mapper/*.o
 /mapper/unittest
@@ -16,5 +19,3 @@ __pycache__
 /passwords.json
 /passwords_hc.json
 /passwords_sneezy.json
-
-.idea/
