@@ -16,3 +16,5 @@ __pycache__
 /passwords.json
 /passwords_hc.json
 /passwords_sneezy.json
+
+.idea/
