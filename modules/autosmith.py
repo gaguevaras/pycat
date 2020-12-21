@@ -14,6 +14,7 @@ def nothingToForage(mud, _):
     else:
         return dir + '\n' + 'forage'
 
+
 def nothingToMine(mud, _):
     dirs = list(mud.gmcp['room']['info']['exits'].keys())
     if len(dirs) == 1:
@@ -21,13 +22,16 @@ def nothingToMine(mud, _):
     else:
         return "speculate"
 
+
 def nothingToChop(mud, _):
     dirs = list(mud.gmcp['room']['info']['exits'].keys())
     return random.choice(dirs) + '\n' + 'chop'
 
+
 def goMine(mud, _):
     mud.modules['mapper'].go(-565509103)
     mud.send('mastermine')
+
 
 def buyBread(mud, _):
     return
@@ -64,6 +68,7 @@ def smith(mud, _):
 
     return "carve supple {arg}".format(arg=smithable)
 
+
 def failSmithing(mud, _):
     if 'smithing' in mud.state:
         mud.state['smithing'] -= 1
@@ -71,38 +76,42 @@ def failSmithing(mud, _):
 
 def speculateFor(mud, groups):
     mud.state['speculate'] = {
-            'direction': groups[0],
-            'targets': groups[1].split(' '),
-            'success': True,
-            }
+        'direction': groups[0],
+        'targets': groups[1].split(' '),
+        'success': True,
+    }
     mud.send("speculate")
+
 
 def specLine(mud, groups):
     if 'speculate' not in mud.state:
         return
     fixdir = {
-            'below': 'd',
-            'above you': 'u',
-            'to the north': 'n',
-            'to the east': 'e',
-            'to the south': 's',
-            'to the west': 'w',
-            '.': '',  # here
-            }
+        'below': 'd',
+        'above you': 'u',
+        'to the north': 'n',
+        'to the east': 'e',
+        'to the south': 's',
+        'to the west': 'w',
+        '.': '',  # here
+    }
     resource, direction = groups
     direction = fixdir[direction]
     if 'results' not in mud.state['speculate']:
         mud.state['speculate']['results'] = {}
     mud.state['speculate']['results'][resource] = direction
 
+
 def speculateFailed(mud, _):
     if 'speculate' in mud.state:
         mud.state['speculate']['success'] = False
+
 
 def speculateDoublecheck(mud, matches):
     if 'speculate' in mud.state:
         if matches[0] not in mud.state['speculate']['targets']:
             return nothingToMine(mud, matches)
+
 
 def speculateDone(mud, _):
     if 'speculate' in mud.state:
@@ -111,12 +120,12 @@ def speculateDone(mud, _):
             return "speculate"
 
         resource_to_skill = {
-                'mithril': 'mastermine',
-                'iron': 'mastermine',
-                'coal': 'mastermine',
-                'silk': 'masterforage',
-                'sugar': 'masterforage',
-                }
+            'mithril': 'mastermine',
+            'iron': 'mastermine',
+            'coal': 'mastermine',
+            'silk': 'masterforage',
+            'sugar': 'masterforage',
+        }
         for tgt in mud.state['speculate']['targets']:
             if 'results' in mud.state['speculate'] and tgt in mud.state['speculate']['results']:
                 mud.send("{}\n{}".format(mud.state['speculate']['results'][tgt], resource_to_skill[tgt]))
@@ -124,13 +133,13 @@ def speculateDone(mud, _):
         else:
             ex = list(map(lambda s: s.lower(), mud.gmcp['room']['info']['exits'].keys()))
             reverse = {
-                    'n': 's',
-                    'e': 'w',
-                    's': 'n',
-                    'w': 'e',
-                    'u': 'd',
-                    'd': 'u',
-                    }
+                'n': 's',
+                'e': 'w',
+                's': 'n',
+                'w': 'e',
+                'u': 'd',
+                'd': 'u',
+            }
             if mud.state['speculate']['direction'] in ex:
                 go = mud.state['speculate']['direction']
             elif reverse[mud.state['speculate']['direction']] in ex:
@@ -140,17 +149,20 @@ def speculateDone(mud, _):
             mud.send(go + "\nspeculate")
     mud.state['speculate']['results'] = {}
 
+
 def mined(mud, matches):
     resource = matches[0]
     here = mud.modules['mapper'].current()
     path = mud.modules['mapper'].path('565511209')
     rpath = mud.modules['mapper'].path2('565511209', here)
-    return 'mastermine bundle all {resource}\nget {resource} bundle\n{path}\ndrink sink\ndrop {resource} bundle\nlook {resource} bundle\n{rpath}\nmastermine'.format(resource=resource, path=path, rpath=rpath)
+    return 'mastermine bundle all {resource}\nget {resource} bundle\n{path}\ndrink sink\ndrop {resource} bundle\nlook {resource} bundle\n{rpath}\nmastermine'.format(
+        resource=resource, path=path, rpath=rpath)
 
 
 def startScrapping(mud, groups):
     mud.state['scrapping'] = groups[0]
     mud.send('scrap ' + groups[0])
+
 
 def scrapAgain(mud, groups):
     if 'scrapping' in mud.state:
@@ -160,7 +172,8 @@ def scrapAgain(mud, groups):
 def scrapeItems(mud, groups):
     # TODO: choose skill
     skill = 'carve'
-    with urllib.request.urlopen('https://raw.githubusercontent.com/bozimmerman/CoffeeMud/master/resources/skills/carpentry.txt') as f:
+    with urllib.request.urlopen(
+            'https://raw.githubusercontent.com/bozimmerman/CoffeeMud/master/resources/skills/carpentry.txt') as f:
         skill_file = f.read().decode('utf-8')
 
     class Item(object):
@@ -191,9 +204,9 @@ def scrapeItems(mud, groups):
     # prioritize fast exp gain over low material cost by sorting by time
     lowLevelItems = list(filter(lambda item: item.level <= 6, items))
     filler = sorted(
-                sorted(lowLevelItems
-                , key=lambda item: item.cost)
-            , key=lambda item: item.craftingTime)[0]
+        sorted(lowLevelItems
+               , key=lambda item: item.cost)
+        , key=lambda item: item.craftingTime)[0]
 
     itemsPerLevel = {}
     for item in items:
@@ -203,7 +216,8 @@ def scrapeItems(mud, groups):
 
     craftPerLevel = {}
     for level, itemsPerLevel in itemsPerLevel.items():
-        sortedByBenefit = sorted(itemsPerLevel, key=lambda item: (5 * filler.craftingTime + item.craftingTime) / (5 * filler.cost + item.cost))
+        sortedByBenefit = sorted(itemsPerLevel, key=lambda item: (5 * filler.craftingTime + item.craftingTime) / (
+                    5 * filler.cost + item.cost))
         craftPerLevel[level] = sortedByBenefit[-1].name
 
     substs = []
@@ -223,11 +237,11 @@ def scrapeItems(mud, groups):
 class AutoSmith(BaseModule):
     def getAliases(self):
         return {
-                'scrape (.+)': scrapeItems,
-                'smith': smith,
-                'autoscrap (.*)': startScrapping,
-                'specfor (.) (.*)': speculateFor,
-                }
+            'scrape (.+)': scrapeItems,
+            'smith': smith,
+            'autoscrap (.*)': startScrapping,
+            'specfor (.) (.*)': speculateFor,
+        }
 
     def getTriggers(self):
         return {
@@ -236,9 +250,11 @@ class AutoSmith(BaseModule):
             'You are thirsty.': 'drink sink',
             'You are hungry.': 'eat bread',
             # 'You are done building a fire.': 'chop',
-            'You manage to chop up \d+ pounds? of (\w+)\.': lambda  world, matches: 'chop bundle all ' + matches[0] + '\nspeculate',
+            'You manage to chop up \d+ pounds? of (\w+)\.': lambda world, matches: 'chop bundle all ' + matches[
+                0] + '\nspeculate',
             'You manage to mine \d+ pounds? of (.+)\.': mined,
-            'You manage to gather \d+ pounds? of (\w+)\.': lambda  world, matches: 'forage bundle all ' + matches[0] + '\nforage',
+            'You manage to gather \d+ pounds? of (\w+)\.': lambda world, matches: 'forage bundle all ' + matches[
+                0] + '\nforage',
             'You are done chopping.': 'chop',
             # 'You are done foraging.': 'forage',
             'You can\'t seem to find anything worth mining here.': nothingToMine,
@@ -262,12 +278,12 @@ class AutoSmith(BaseModule):
             'You mess up carving .*': failSmithing,
             'Your speculate attempt failed.': speculateFailed,
             'You are done skinning and butchering the body of .*': 'butcher corpse',
-            }
+        }
 
     def honeTimer(self, mud):
         if 'honeSkills' not in mud.state:
             mud.state['honeSkills'] = ['constr title foo', 'gemdig', 'masonry title blarg', 'search', 'mastermine']
-        
+
         skillToCmd = ['Construction', 'Gem Digging', 'Masonry', 'Searching', 'Master Mining']
 
         def onHoneSuccess(skill):
@@ -290,14 +306,15 @@ class AutoSmith(BaseModule):
         mud.state['hone_on_success'] = onHoneSuccess
         mud.state['honing'] = (cmd, 1)
         self.send("stand\n{}".format(cmd))
-        
+
     def getTimers(self):
         if False:
             return {
-                "hone": self.mktimer(60*5 + 5, self.honeTimer),
-                }
+                "hone": self.mktimer(60 * 5 + 5, self.honeTimer),
+            }
         else:
             return {}
+
 
 def getClass():
     return AutoSmith

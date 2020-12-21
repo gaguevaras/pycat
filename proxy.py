@@ -83,6 +83,7 @@ if __name__ == "__main__":
             stopFlag.set()
         print("Gracefully shutting down in echo")
 
+
     socketToPipeR, pipeToSocketW, stopFlag, work = proxy('::1', 1234)
     echoThr = threading.Thread(target=echo, args=[socketToPipeR, pipeToSocketW, stopFlag])
     echoThr.start()

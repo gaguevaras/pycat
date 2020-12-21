@@ -11,6 +11,7 @@ import sys
 import telnetlib
 import threading
 import traceback
+
 telnetlib.GMCP = b'\xc9'
 
 
@@ -53,7 +54,8 @@ class Session(object):
         return re.sub(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]', '', line)
 
     def gmcpOut(self, msg):
-        self.telnet.sock.sendall(telnetlib.IAC + telnetlib.SB + telnetlib.GMCP + msg.encode(self.mud_encoding) + telnetlib.IAC + telnetlib.SE)
+        self.telnet.sock.sendall(telnetlib.IAC + telnetlib.SB + telnetlib.GMCP + msg.encode(
+            self.mud_encoding) + telnetlib.IAC + telnetlib.SE)
 
     def iac(self, sock, cmd, option):
         if cmd == telnetlib.WILL:
@@ -61,14 +63,16 @@ class Session(object):
                 self.log("Enabling GMCP")
                 sock.sendall(telnetlib.IAC + telnetlib.DO + option)
                 self.gmcpOut('Core.Hello { "client": "Cizra", "version": "1" }')
-                supportables = ['char 1', 'char.base 1', 'char.maxstats 1', 'char.status 1', 'char.statusvars 1', 'char.vitals 1', 'char.worth 1', 'comm 1', 'comm.tick 1', 'group 1', 'room 1', 'room.info 1']
+                supportables = ['char 1', 'char.base 1', 'char.maxstats 1', 'char.status 1', 'char.statusvars 1',
+                                'char.vitals 1', 'char.worth 1', 'comm 1', 'comm.tick 1', 'group 1', 'room 1',
+                                'room.info 1']
                 self.gmcpOut('Core.Supports.Set ' + str(supportables).replace("'", '"'))
                 self.gmcpOut('request room')
                 self.gmcpOut('request char')
             elif option == telnetlib.TTYPE:
                 self.log("Sending terminal type 'Cizra'")
                 sock.sendall(telnetlib.IAC + telnetlib.DO + option +
-                        telnetlib.IAC + telnetlib.SB + telnetlib.TTYPE + telnetlib.BINARY + b'Cizra' + telnetlib.IAC + telnetlib.SE)
+                             telnetlib.IAC + telnetlib.SB + telnetlib.TTYPE + telnetlib.BINARY + b'Cizra' + telnetlib.IAC + telnetlib.SE)
 
             else:
                 sock.sendall(telnetlib.IAC + telnetlib.DONT + option)
@@ -153,7 +157,6 @@ class Session(object):
         self.pipeToSocketW.write(line.encode(self.client_encoding))
         self.pipeToSocketW.flush()
 
-
     def handle_from_pipe(self):
         data = b''  # to handle partial lines
         try:
@@ -175,7 +178,6 @@ class Session(object):
             self.stopFlag.set()
             self.world.quit()
             raise
-
 
     def handle_output_line(self, data):
         pprint.pprint(data)
@@ -201,7 +203,6 @@ class Session(object):
             else:
                 if not handled:
                     self.send(data)
-
 
     def run(self):
         try:
@@ -231,5 +232,5 @@ def main():
     ses.run()
 
 
-assert(__name__ == '__main__')
+assert (__name__ == '__main__')
 main()

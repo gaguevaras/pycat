@@ -4,11 +4,11 @@ import time
 
 
 def stack(line):
-    assert('\n' not in line)
+    assert ('\n' not in line)
     out = []
     startmatch = 0
     for i in range(1, len(line) - 1):
-        if line[i] == ';' and line[i-1] != ';' and line[i+1] != ';':
+        if line[i] == ';' and line[i - 1] != ';' and line[i + 1] != ';':
             out.append(line[startmatch:i].replace(';;', ';'))
             startmatch = i + 1
     out.append(line[startmatch:].replace(';;', ';'))
@@ -187,6 +187,7 @@ class ModularClient(TimerMixin):
 
     def getTimers(self):
         return {}
+
 
 def getClass():
     return ModularClient

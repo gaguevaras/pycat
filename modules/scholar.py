@@ -4,13 +4,12 @@ import random
 import re
 import time
 
-
 # start with at least 10 charisma, max int and wis
 # At level 1, train scholar, practice write
 # At level 2, write book
 # At level 3, gain engraving and embroidering, prac herbology
 # At level 4, gain combat log
-#(# At level 5, gain organizing)
+# (# At level 5, gain organizing)
 # At level 7, gain find home
 # At level 10, gain wilderness lore
 # At level 11, gain book naming
@@ -23,23 +22,24 @@ import time
 # TODO: book loaning
 
 skills_by_level = {
-        1: ['herb herb'],
-        2: ['label book', 'engrave bowl bowl', 'embroider sock sock'],
-        3: ['light fire', 'combatlog self', 'combatlog stop'],
-        5: ['organ room name'],#, 'smokesig testing testing 1 2 3'],
-        6: ['entitle book book', 'findhome'],
-        7: ['bookedit book', 'knowplant herb'],
-        9: ['wlore', 'transcribe paper book'],
-        10: ['bname book 1 book', 'speculate'],
-        11: ['lore book'],
-        12: ['rlore human', 'findship'],
-        13: ['cwrite book', 'map paper'],
-        15: ['plantlore'],
-        18: ['recollect happy'],
-        21: ['plore astral'],
-        22: ['survey room book'],
-        29: ['mherb herb'],
-        }
+    1: ['herb herb'],
+    2: ['label book', 'engrave bowl bowl', 'embroider sock sock'],
+    3: ['light fire', 'combatlog self', 'combatlog stop'],
+    5: ['organ room name'],  # , 'smokesig testing testing 1 2 3'],
+    6: ['entitle book book', 'findhome'],
+    7: ['bookedit book', 'knowplant herb'],
+    9: ['wlore', 'transcribe paper book'],
+    10: ['bname book 1 book', 'speculate'],
+    11: ['lore book'],
+    12: ['rlore human', 'findship'],
+    13: ['cwrite book', 'map paper'],
+    15: ['plantlore'],
+    18: ['recollect happy'],
+    21: ['plore astral'],
+    22: ['survey room book'],
+    29: ['mherb herb'],
+}
+
 
 def write(mud, lag=1):
     if mud.gmcp['room']['info']['num'] != 1741703288:
@@ -62,24 +62,31 @@ def write(mud, lag=1):
     mud.triggers['Enter an empty line to exit.'] = '\nblarg'
 
     lagSend(mud, lag, 'stand')
-    lagSend(mud, lag + 1, 'write book "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"')
+    lagSend(mud, lag + 1,
+            'write book "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"')
+
 
 def practiceOne(mud):
     level = mud.level() - 1
     mud.log("practiceOne")
     practiceImpl(mud, level, 0, -2)
 
+
 def practiceTwo(mud):
     mud.log("practiceTwo")
     level = mud.level() - 1
-    practiceImpl(mud, level-1, 0, -2)
+    practiceImpl(mud, level - 1, 0, -2)
+
 
 def lagSend(mud, lag, cmd):
     mud.log("Enqueueing " + cmd + " @ " + str(lag))
+
     def logAndSend(cmd):
         mud.log("laggy send " + cmd)
         mud.send(cmd)
+
     mud.timers["lagsend_" + cmd] = mud.mkdelay(lag, lambda m, cmd=cmd: logAndSend(cmd))
+
 
 def practiceImpl(mud, begin, end, step):
     if mud.gmcp['room']['info']['num'] != 1741703288:
@@ -98,10 +105,12 @@ def practiceImpl(mud, begin, end, step):
     write(mud, lag)
     return
 
+
 def learnFrom(mud, matches):
     if 'learn' not in mud.state:
         mud.state['learn'] = {}
     mud.state['learn']['from'] = matches[0]
+
 
 def startLearning(mud, matches):
     if 'learn' not in mud.state:
@@ -118,6 +127,7 @@ def failedLearning(world, matches):
     world.state['learn']['failed'] = True
     world.send("study {} {}".format(world.state['learn']['from'], matches[0]))
 
+
 def doneLearning(world, matches):
     if 'learn' not in world.state:
         return
@@ -128,24 +138,27 @@ def doneLearning(world, matches):
     else:
         del state['failed']
 
+
 def tryAgainTeaching(world, matches):
     if 'learn' not in world.state:
         return
     if 'times' not in world.state['learn']:
         world.state['learn']['times'] = 0
     world.state['learn']['times'] += 1
-    if world.state['learn']['times'] < 10: 
+    if world.state['learn']['times'] < 10:
         world.send("teach " + world.state['learn']['learner'] + " " + matches[0])
+
 
 def doneTeaching(world, matches):
     world.send('study forget ' + matches[0])
     del world.state['learn']
 
+
 class Scholar(BaseModule):
     def getAliases(self):
         return {
-                '#learnfrom (.+)': learnFrom,
-                }
+            '#learnfrom (.+)': learnFrom,
+        }
 
     def getTriggers(self):
         return {
@@ -157,7 +170,7 @@ class Scholar(BaseModule):
             '^You have remorted back to level 1!': 'run n w\ntrain scholar\ntrain int\ntrain int\ntrain int\ntrain int\nprac write\nrun e s\nsay help',
             # 'You are now in Add Text mode.': lambda mud, groups: [mud.log("Add text handler"), mud.send('q'), mud.send('y')],
             "(.+) whispers to you 'teach me (.+)'.": startLearning,
-            ".+ fails to teach you (.+).": failedLearning, 
+            ".+ fails to teach you (.+).": failedLearning,
             'You are done learning (.+) from (.+).': doneLearning,
             'You already know (.+).': doneLearning,
             "You don't seem to know (.+).": tryAgainTeaching,
@@ -166,13 +179,14 @@ class Scholar(BaseModule):
             "You attempt to write on .*, but mess up.": lambda mud, groups: write(mud, 1),
             'You are hungry.': 'sta\neat bread\nsleep',
             'You are thirsty.': 'stand\ndrink sink\ndrink sink\ndrink sink\ndrink sink\nsleep',
-            }
+        }
 
     def getTimers(self):
         return {
-                "practiceOne": (False, 5+600, 60, practiceOne),
-                "practiceTwo": (False, 5+600, 615, practiceTwo),
-                }
+            "practiceOne": (False, 5 + 600, 60, practiceOne),
+            "practiceTwo": (False, 5 + 600, 615, practiceTwo),
+        }
+
 
 def getClass():
     return Scholar

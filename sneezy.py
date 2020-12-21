@@ -8,6 +8,7 @@ import modules.gzlogging
 import modules.eval
 # import modules.repeat
 import modules.mapper
+
 importlib.reload(modular)
 importlib.reload(modules.gzlogging)
 importlib.reload(modules.eval)
@@ -15,81 +16,82 @@ importlib.reload(modules.eval)
 importlib.reload(modules.mapper)
 
 honeToType = {
-        'heal light': 'cleric',
-        'harm light': 'cleric',
-        'armor': 'cleric',
-        'bless': 'cleric',
-        'rain brimstone': 'cleric',
-        'clot': 'cleric',
-        'create food': 'cleric',
-        'create water': 'cleric',
-        'cure poison': 'cleric',
-        'salve': 'cleric',
-        'heal serious': 'cleric',
-        'sterilize': 'cleric',
-        'remove curse': 'cleric',
-        'cure disease': 'cleric',
-        'refresh': 'cleric',
-        'heal critical': 'cleric',
-        'harm serious': 'cleric',
-        'cure blindness': 'cleric',
-        'cleric repair': 'cleric',
-        'expel': 'cleric',
-        'flamestrike': 'cleric',
-        'curse': 'cleric',
-        'disease': 'cleric',
-        'harm critical': 'cleric',
-        'numb': 'cleric',
-        'poison': 'cleric',
-        'infect': 'cleric',
-        'heal': 'cleric',
-        'summon': 'cleric',
-        'harm': 'cleric',
-        'plague of locusts': 'cleric',
-        'word of recall': 'cleric',
-        'blindness': 'cleric',
-        'paralyze limb': 'cleric',
-        'knit bone': 'cleric',
-        'penance': 'theolog',
-        'attune': 'theolog',
-        'blunt proficiency': 'combat',
-        'slash proficiency': 'combat',
-        'pierce proficiency': 'combat',
-        'barehand proficiency': 'combat',
-        'ranged proficiency': 'combat',
-        'sharpen': 'combat',
-        'smooth': 'combat',
-        'tactics': 'advent',
-        'bandage': 'advent',
-        'ride': 'advent',
-        'dissect': 'advent',
-        'butcher': 'advent',
-        'swim': 'advent',
-        'know animal': 'advent',
-        'defense': 'advent',
-        'know people': 'advent',
-        'lumberjack': 'advent',
-        'fishing': 'advent',
-        'alcoholism': 'advent',
-        'offense': 'advent',
-        'read magic': 'advent',
-        'climbing': 'advent',
-        'know veggie': 'advent',
-        'sign': 'advent',
-        'mend': 'advent',
-        'encamp': 'advent',
-        'know reptile': 'advent',
-        'know giantkin': 'advent',
-        'whittle': 'advent',
-        'evaluate': 'advent',
-        'know other': 'advent',
-        'know undead': 'advent',
-        'gutter cant': 'advent',
-        'gnoll jargon': 'advent',
-        'troglodyte pidgin': 'advent',
-        'know demon': 'advent',
-        'devotion': 'faith',
+    'heal light': 'cleric',
+    'harm light': 'cleric',
+    'armor': 'cleric',
+    'bless': 'cleric',
+    'rain brimstone': 'cleric',
+    'clot': 'cleric',
+    'create food': 'cleric',
+    'create water': 'cleric',
+    'cure poison': 'cleric',
+    'salve': 'cleric',
+    'heal serious': 'cleric',
+    'sterilize': 'cleric',
+    'remove curse': 'cleric',
+    'cure disease': 'cleric',
+    'refresh': 'cleric',
+    'heal critical': 'cleric',
+    'harm serious': 'cleric',
+    'cure blindness': 'cleric',
+    'cleric repair': 'cleric',
+    'expel': 'cleric',
+    'flamestrike': 'cleric',
+    'curse': 'cleric',
+    'disease': 'cleric',
+    'harm critical': 'cleric',
+    'numb': 'cleric',
+    'poison': 'cleric',
+    'infect': 'cleric',
+    'heal': 'cleric',
+    'summon': 'cleric',
+    'harm': 'cleric',
+    'plague of locusts': 'cleric',
+    'word of recall': 'cleric',
+    'blindness': 'cleric',
+    'paralyze limb': 'cleric',
+    'knit bone': 'cleric',
+    'penance': 'theolog',
+    'attune': 'theolog',
+    'blunt proficiency': 'combat',
+    'slash proficiency': 'combat',
+    'pierce proficiency': 'combat',
+    'barehand proficiency': 'combat',
+    'ranged proficiency': 'combat',
+    'sharpen': 'combat',
+    'smooth': 'combat',
+    'tactics': 'advent',
+    'bandage': 'advent',
+    'ride': 'advent',
+    'dissect': 'advent',
+    'butcher': 'advent',
+    'swim': 'advent',
+    'know animal': 'advent',
+    'defense': 'advent',
+    'know people': 'advent',
+    'lumberjack': 'advent',
+    'fishing': 'advent',
+    'alcoholism': 'advent',
+    'offense': 'advent',
+    'read magic': 'advent',
+    'climbing': 'advent',
+    'know veggie': 'advent',
+    'sign': 'advent',
+    'mend': 'advent',
+    'encamp': 'advent',
+    'know reptile': 'advent',
+    'know giantkin': 'advent',
+    'whittle': 'advent',
+    'evaluate': 'advent',
+    'know other': 'advent',
+    'know undead': 'advent',
+    'gutter cant': 'advent',
+    'gnoll jargon': 'advent',
+    'troglodyte pidgin': 'advent',
+    'know demon': 'advent',
+    'devotion': 'faith',
 }
+
 
 def honed(mud, groups):
     skill = groups[0]
@@ -109,7 +111,9 @@ def honed(mud, groups):
     if 'hone_on_success' in mud.state:
         mud.state['hone_on_success'](skill)
 
-    mud.timers["hone_again_notification_for_" + skill] = mud.mkdelay(301, lambda m: mud.log("You can now hone " + skill))
+    mud.timers["hone_again_notification_for_" + skill] = mud.mkdelay(301,
+                                                                     lambda m: mud.log("You can now hone " + skill))
+
 
 def showHones(mud, _):
     found = False
@@ -129,6 +133,7 @@ def showHones(mud, _):
     if not found:
         mud.show("No skills honed recently")
 
+
 def setSkillLevel(mud, groups):
     if 'skillLevels' not in mud.state:
         mud.state['skillLevels'] = {}
@@ -140,19 +145,20 @@ def setSkillLevel(mud, groups):
 
     mud.state['skillLevels'][skill] = (learned, potential)
 
-ALIASES={
-        'sc': 'score',
-        '#hones': showHones,
-        }
 
-TRIGGERS={
-        r'^You are thirsty\.$': 'drink waterskin',
-        r'^\*\*\* PRESS RETURN:': '',
-        r'^You feel your skills honing in regards to (.+)\.': honed,
-        r'^You feel Mezan, the father favoring you more in respects to (.+)\.': honed,
-        r'^(.+?)  +Current:  \((.+)\) +Potential:  \((.+)\)': setSkillLevel,
-        r'^(.+?)  +Current:  \((.+)\) *': setSkillLevel,
-        }
+ALIASES = {
+    'sc': 'score',
+    '#hones': showHones,
+}
+
+TRIGGERS = {
+    r'^You are thirsty\.$': 'drink waterskin',
+    r'^\*\*\* PRESS RETURN:': '',
+    r'^You feel your skills honing in regards to (.+)\.': honed,
+    r'^You feel Mezan, the father favoring you more in respects to (.+)\.': honed,
+    r'^(.+?)  +Current:  \((.+)\) +Potential:  \((.+)\)': setSkillLevel,
+    r'^(.+?)  +Current:  \((.+)\) *': setSkillLevel,
+}
 
 
 class Sneezy(modular.ModularClient):
@@ -164,11 +170,11 @@ class Sneezy(modular.ModularClient):
 
         self.modules = {}
         mods = {
-                'eval': (modules.eval.Eval, []),
-                # 'repeat': (modules.repeat.Repeat, []),
-                'gzlogging': (modules.gzlogging.GzLogging, [self.logfname]),
-                'mapper': (modules.mapper.Mapper, [True, self.mapfname, True]),
-                }
+            'eval': (modules.eval.Eval, []),
+            # 'repeat': (modules.repeat.Repeat, []),
+            'gzlogging': (modules.gzlogging.GzLogging, [self.logfname]),
+            'mapper': (modules.mapper.Mapper, [True, self.mapfname, True]),
+        }
 
         for modname, module in mods.items():
             try:
@@ -201,7 +207,7 @@ class Sneezy(modular.ModularClient):
 
     def startAutoHone(self, skill, cmd):
         self.log("Autohoning {} as {}".format(skill, cmd))
-        self.timers['autohone_' + cmd] = self.mktimernow(60*5 + 1, lambda mud: self.honeTimer(skill, cmd))
+        self.timers['autohone_' + cmd] = self.mktimernow(60 * 5 + 1, lambda mud: self.honeTimer(skill, cmd))
 
     def honeTimer(self, skill, cmd):
         def onHoneSuccess(skillHoned):
@@ -219,6 +225,7 @@ class Sneezy(modular.ModularClient):
 
     def getHostPort(self):
         return 'sneezymud.org', 7900
+
 
 def getClass():
     return Sneezy

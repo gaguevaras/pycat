@@ -51,6 +51,5 @@ class Kotl(modular.ModularClient):
         return 'kotl.org', 2222
 
 
-
 def getClass():
     return Kotl
