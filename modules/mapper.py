@@ -195,6 +195,8 @@ def assemble(cmds1, mode="go"):
         out.append(runifyDirs(directions))
     return ';'.join(out)
 
+def checkExits(mud, groups):
+    print("groups:", groups)
 
 class Mapper(BaseModule):
     def help(self, args):
@@ -773,3 +775,13 @@ class Mapper(BaseModule):
                 else:
                     self.autoVisit(['exit'] if 'autoVisitArea' not in self.world.state else None)
             # self.show(self.draw())
+
+
+
+    def getAliases(self):
+        return {}
+
+    def getTriggers(self):
+        return {
+            r'\[(.*)\((.*)\)\:\s(.*\s*)\]': checkExits
+        }

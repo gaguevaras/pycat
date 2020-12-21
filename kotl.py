@@ -16,7 +16,7 @@ ALIASES = {
 }
 
 TRIGGERS = {
-    r'^You are thirsty\.$': 'drink waterskin'
+    # r'^You are thirsty\.$': 'drink waterskin',
 }
 
 
@@ -31,7 +31,7 @@ class Kotl(modular.ModularClient):
         mods = {
             'eval': (modules.eval.Eval, []),
             'logging': (modules.logging.Logging, [self.logfname]),
-            # 'mapper': (modules.mapper.Mapper, [True, self.mapfname, True]),
+            'mapper': (modules.mapper.Mapper, [True, self.mapfname, True]),
         }
 
         for modname, module in mods.items():
@@ -49,6 +49,7 @@ class Kotl(modular.ModularClient):
 
     def getHostPort(self):
         return 'kotl.org', 2222
+
 
 
 def getClass():

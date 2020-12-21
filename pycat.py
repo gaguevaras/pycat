@@ -141,9 +141,13 @@ class Session(object):
                 if replacement is not None:
                     line = replacement
             prn.append(line)
+        print(self.escape_ansi('\n'.join(prn)))
         self.pipeToSocketW.write('\n'.join(prn).encode(self.mud_encoding))
         self.pipeToSocketW.flush()
 
+    def escape_ansi(self, line):
+        ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
+        return ansi_escape.sub('', line)
 
     def show(self, line):
         self.pipeToSocketW.write(line.encode(self.client_encoding))
